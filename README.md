@@ -3,7 +3,7 @@
 Static gallery for ManiSkill task examples.
 
 - Open `index.html` locally to view the gallery.
-- The page is self-contained: all rendered images and demo videos are embedded.
+- The page uses local files under `assets/` for rendered images and demo videos.
 - Current coverage: 67 registered tasks, 60 with example media, 7 still missing.
 
 The missing tasks depend on the `mani_skill2_ycb` asset. The official ManiSkill downloader failed with a SHA-256 checksum mismatch when this gallery was generated.
