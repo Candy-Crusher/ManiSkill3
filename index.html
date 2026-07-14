@@ -71,6 +71,18 @@
       cursor: pointer;
     }
     button.active { border-color: var(--accent); color: var(--accent); }
+    .page-link {
+      display: inline-flex;
+      align-items: center;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--accent);
+      padding: 0 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
     main {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -173,6 +185,7 @@
     <h1>ManiSkill Task Gallery</h1>
     <p>67 registered tasks, 67 with an example media asset, 0 still missing. Run <code>scripts/generate_task_gallery.py --render-missing</code> in a ManiSkill-ready environment to fill missing screenshots.</p>
     <div class="toolbar">
+      <a class="page-link" href="many-success-quads.html">PegInsertionSide / PlugCharger 200 replayed demos</a>
       <input id="search" type="search" placeholder="Search tasks, classes, categories" aria-label="Search tasks">
       <div class="filter-row">
         <span class="filter-label">Source</span>
