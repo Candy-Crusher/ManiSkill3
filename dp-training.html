@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ManiSkill DP Training Results</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #dbe1ea;
+      --accent: #0f766e;
+      --warn: #b45309;
+      --bad: #b42318;
+      --good: #047857;
+      --blue: #2563eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 42px); letter-spacing: 0; }
+    header p { margin: 0; color: var(--muted); max-width: 980px; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--accent);
+      padding: 8px 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    main {
+      display: grid;
+      gap: 18px;
+      padding: 24px 32px 44px;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .metric, .panel, .task {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .metric { padding: 14px; }
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .metric strong {
+      display: block;
+      margin-top: 4px;
+      font-size: clamp(24px, 4vw, 36px);
+      line-height: 1.05;
+    }
+    .metric small { color: var(--muted); }
+    .panel { padding: 18px; }
+    .panel h2, .task h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+    .chart-wrap {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+    .swatch.blue { background: var(--blue); }
+    .tasks {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .task { overflow: hidden; }
+    .task-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .task h2 { margin: 0; }
+    .badge {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge.running { background: #e0f2fe; color: #075985; }
+    .badge.ready { background: #dcfce7; color: var(--good); }
+    .badge.failed { background: #fee2e2; color: var(--bad); }
+    .task-body { padding: 14px 16px 16px; }
+    dl {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+    }
+    dl div {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 7px;
+    }
+    dt { color: var(--muted); }
+    dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+    .note {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    th, td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: 0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+    @media (max-width: 840px) {
+      header { padding: 22px 18px 16px; }
+      main { padding: 18px; }
+      .summary, .tasks { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ManiSkill Diffusion Policy Training</h1>
+    <p>State-based Diffusion Policy runs on official ManiSkill motion-planning demonstrations. This page tracks the current training/evaluation results and the data preparation status for PegInsertionSide-v1 and PlugCharger-v1.</p>
+    <nav>
+      <a href="index.html">Task gallery</a>
+      <a href="many-success-quads.html">100-demo 4D replay gallery</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="summary" aria-label="Current metrics">
+      <div class="metric">
+        <span>Peg best success once</span>
+        <strong>33%</strong>
+        <small>100 eval episodes, seed 0</small>
+      </div>
+      <div class="metric">
+        <span>Peg best success at end</span>
+        <strong>29%</strong>
+        <small>checkpoint saved</small>
+      </div>
+      <div class="metric">
+        <span>Peg demos</span>
+        <strong>100</strong>
+        <small>15,382 transitions</small>
+      </div>
+      <div class="metric">
+        <span>Plug demos</span>
+        <strong>100</strong>
+        <small>31,697 transitions</small>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>PegInsertionSide-v1 Evaluation Curve</h2>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 900 360" role="img" aria-label="PegInsertionSide evaluation success curve">
+          <rect x="0" y="0" width="900" height="360" fill="#ffffff"></rect>
+          <g stroke="#dbe1ea" stroke-width="1">
+            <line x1="70" y1="280" x2="850" y2="280"></line>
+            <line x1="70" y1="216" x2="850" y2="216"></line>
+            <line x1="70" y1="152" x2="850" y2="152"></line>
+            <line x1="70" y1="88" x2="850" y2="88"></line>
+            <line x1="70" y1="24" x2="850" y2="24"></line>
+          </g>
+          <g fill="#5f6b7a" font-size="12" font-family="system-ui, sans-serif">
+            <text x="28" y="284">0.00</text>
+            <text x="28" y="220">0.10</text>
+            <text x="28" y="156">0.20</text>
+            <text x="28" y="92">0.30</text>
+            <text x="28" y="28">0.40</text>
+            <text x="66" y="312">0</text>
+            <text x="246" y="312">25k</text>
+            <text x="441" y="312">50k</text>
+            <text x="636" y="312">75k</text>
+            <text x="826" y="312">100k</text>
+            <text x="386" y="342">Training iteration</text>
+          </g>
+          <polyline fill="none" stroke="#0f766e" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="70,280 109,273.6 148,235.2 187,235.2 226,209.6 265,177.6 304,132.8 343,158.4 382,152 421,126.4 460,120 499,81.6 538,81.6 577,94.4 616,88 655,68.8 694,81.6 733,113.6 772,94.4 811,88 850,100.8"></polyline>
+          <polyline fill="none" stroke="#2563eb" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="70,280 109,280 148,248 187,248 226,222.4 265,196.8 304,158.4 343,177.6 382,158.4 421,158.4 460,139.2 499,126.4 538,94.4 577,132.8 616,132.8 655,100.8 694,113.6 733,126.4 772,120 811,100.8 850,120"></polyline>
+          <g fill="#0f766e">
+            <circle cx="70" cy="280" r="4"></circle><circle cx="109" cy="273.6" r="4"></circle><circle cx="148" cy="235.2" r="4"></circle><circle cx="187" cy="235.2" r="4"></circle><circle cx="226" cy="209.6" r="4"></circle><circle cx="265" cy="177.6" r="4"></circle><circle cx="304" cy="132.8" r="4"></circle><circle cx="343" cy="158.4" r="4"></circle><circle cx="382" cy="152" r="4"></circle><circle cx="421" cy="126.4" r="4"></circle><circle cx="460" cy="120" r="4"></circle><circle cx="499" cy="81.6" r="4"></circle><circle cx="538" cy="81.6" r="4"></circle><circle cx="577" cy="94.4" r="4"></circle><circle cx="616" cy="88" r="4"></circle><circle cx="655" cy="68.8" r="4"></circle><circle cx="694" cy="81.6" r="4"></circle><circle cx="733" cy="113.6" r="4"></circle><circle cx="772" cy="94.4" r="4"></circle><circle cx="811" cy="88" r="4"></circle><circle cx="850" cy="100.8" r="4"></circle>
+          </g>
+          <g fill="#2563eb">
+            <circle cx="70" cy="280" r="4"></circle><circle cx="109" cy="280" r="4"></circle><circle cx="148" cy="248" r="4"></circle><circle cx="187" cy="248" r="4"></circle><circle cx="226" cy="222.4" r="4"></circle><circle cx="265" cy="196.8" r="4"></circle><circle cx="304" cy="158.4" r="4"></circle><circle cx="343" cy="177.6" r="4"></circle><circle cx="382" cy="158.4" r="4"></circle><circle cx="421" cy="158.4" r="4"></circle><circle cx="460" cy="139.2" r="4"></circle><circle cx="499" cy="126.4" r="4"></circle><circle cx="538" cy="94.4" r="4"></circle><circle cx="577" cy="132.8" r="4"></circle><circle cx="616" cy="132.8" r="4"></circle><circle cx="655" cy="100.8" r="4"></circle><circle cx="694" cy="113.6" r="4"></circle><circle cx="733" cy="126.4" r="4"></circle><circle cx="772" cy="120" r="4"></circle><circle cx="811" cy="100.8" r="4"></circle><circle cx="850" cy="120" r="4"></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i class="swatch"></i>success once</span>
+        <span><i class="swatch blue"></i>success at end</span>
+      </div>
+      <p class="note">Latest observed run: job 31459366 on holygpu7c0711. The run was still active when this page snapshot was generated.</p>
+    </section>
+
+    <section class="tasks" aria-label="Task training status">
+      <article class="task">
+        <div class="task-head">
+          <h2>PegInsertionSide-v1</h2>
+          <span class="badge running">training running</span>
+        </div>
+        <div class="task-body">
+          <dl>
+            <div><dt>Demo source</dt><dd>official motion planning replay</dd></div>
+            <div><dt>Replay success</dt><dd>947 / 1000 trajectories saved</dd></div>
+            <div><dt>Training subset</dt><dd>100 demos</dd></div>
+            <div><dt>Control mode</dt><dd><code>pd_ee_delta_pose</code></dd></div>
+            <div><dt>Observation</dt><dd><code>state</code></dd></div>
+            <div><dt>Eval seed</dt><dd>0</dd></div>
+            <div><dt>Best checkpoint</dt><dd><code>best_eval_success_once.pt</code>, <code>best_eval_success_at_end.pt</code></dd></div>
+          </dl>
+          <p class="note">The best observed evaluation so far is 33% success-once and 29% success-at-end over 100 closed-loop evaluation episodes.</p>
+        </div>
+      </article>
+
+      <article class="task">
+        <div class="task-head">
+          <h2>PlugCharger-v1</h2>
+          <span class="badge failed">train retry needed</span>
+        </div>
+        <div class="task-body">
+          <dl>
+            <div><dt>Demo source</dt><dd>official motion planning replay</dd></div>
+            <div><dt>Replay state data</dt><dd class="warn">ready</dd></div>
+            <div><dt>Training subset</dt><dd>100 demos</dd></div>
+            <div><dt>Transitions</dt><dd>31,697</dd></div>
+            <div><dt>Control mode</dt><dd><code>pd_ee_delta_pose</code></dd></div>
+            <div><dt>Observed failure</dt><dd class="bad">segmentation fault after Vulkan renderer errors</dd></div>
+          </dl>
+          <p class="note">The state replay is complete. The first DP training attempt loaded data and started optimization, then crashed on a node with broken Vulkan renderer initialization. The next retry should avoid renderer-dependent eval or use a known-good rendering node.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Evaluation Points</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Iteration</th>
+            <th>Success once</th>
+            <th>Success at end</th>
+            <th>Mean return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>0.00</td><td>0.00</td><td>0.00</td></tr>
+          <tr><td>5k</td><td>0.01</td><td>0.00</td><td>0.17</td></tr>
+          <tr><td>10k</td><td>0.07</td><td>0.05</td><td>5.99</td></tr>
+          <tr><td>15k</td><td>0.07</td><td>0.05</td><td>8.88</td></tr>
+          <tr><td>20k</td><td>0.11</td><td>0.09</td><td>14.45</td></tr>
+          <tr><td>25k</td><td>0.16</td><td>0.13</td><td>19.97</td></tr>
+          <tr><td>30k</td><td>0.23</td><td>0.19</td><td>32.68</td></tr>
+          <tr><td>35k</td><td>0.19</td><td>0.16</td><td>23.69</td></tr>
+          <tr><td>40k</td><td>0.20</td><td>0.19</td><td>27.93</td></tr>
+          <tr><td>45k</td><td>0.24</td><td>0.19</td><td>31.73</td></tr>
+          <tr><td>50k</td><td>0.25</td><td>0.22</td><td>33.74</td></tr>
+          <tr><td>55k</td><td>0.31</td><td>0.24</td><td>36.77</td></tr>
+          <tr><td>60k</td><td>0.31</td><td>0.29</td><td>41.83</td></tr>
+          <tr><td>65k</td><td>0.29</td><td>0.23</td><td>39.17</td></tr>
+          <tr><td>70k</td><td>0.30</td><td>0.23</td><td>39.02</td></tr>
+          <tr><td>75k</td><td>0.33</td><td>0.28</td><td>40.71</td></tr>
+          <tr><td>80k</td><td>0.31</td><td>0.26</td><td>36.91</td></tr>
+          <tr><td>85k</td><td>0.26</td><td>0.24</td><td>37.08</td></tr>
+          <tr><td>90k</td><td>0.29</td><td>0.25</td><td>35.94</td></tr>
+          <tr><td>95k</td><td>0.30</td><td>0.28</td><td>43.74</td></tr>
+          <tr><td>100k</td><td>0.28</td><td>0.25</td><td>38.89</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
