@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ManiSkill DP Visual Samples</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #dbe1ea;
+      --accent: #0f766e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 42px); letter-spacing: 0; }
+    header p { margin: 0; color: var(--muted); max-width: 980px; }
+    nav, .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      align-items: center;
+    }
+    nav a, button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--accent);
+      padding: 8px 12px;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    button {
+      color: var(--ink);
+      cursor: pointer;
+    }
+    button.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    main { padding: 24px 32px 44px; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin: 0 0 14px;
+    }
+    h2 { margin: 0; font-size: 22px; letter-spacing: 0; }
+    .section-head p { margin: 0; color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .sample {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .media {
+      position: relative;
+      background: #111827;
+    }
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #111827;
+    }
+    .tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 1;
+      border-radius: 4px;
+      background: rgba(17, 24, 39, 0.76);
+      color: #f8fafc;
+      padding: 3px 6px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .body {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px 12px;
+      color: var(--muted);
+    }
+    .body strong { color: var(--ink); }
+    .hidden { display: none; }
+    @media (max-width: 720px) {
+      header { padding: 22px 18px 16px; position: static; }
+      main { padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Visual Samples</h1>
+    <p>Sampled 4D replay videos from the successful demonstration set used around the DP experiments. Each video is a synchronized RGB / depth / optical flow / 3D scene-flow quad rendered from the human-view camera.</p>
+    <nav>
+      <a href="index.html">Task gallery</a>
+      <a href="dp-training.html">DP training results</a>
+      <a href="many-success-quads.html">Full 100-demo gallery</a>
+    </nav>
+    <div class="filters">
+      <button type="button" class="active" data-filter="all">all samples</button>
+      <button type="button" data-filter="peg">PegInsertionSide</button>
+      <button type="button" data-filter="plug">PlugCharger</button>
+    </div>
+  </header>
+  <main>
+    <div class="section-head">
+      <h2>Sampled Replayed Success Demos</h2>
+      <p>12 compact examples, 6 per task.</p>
+    </div>
+    <section class="grid" id="samples">
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0000</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0000-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 0</span></div>
+      </article>
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0025</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0025-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 25</span></div>
+      </article>
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0050</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0050-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 50</span></div>
+      </article>
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0068</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0068-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 68</span></div>
+      </article>
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0085</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0085-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 85</span></div>
+      </article>
+      <article class="sample" data-task="peg">
+        <div class="media"><span class="tag">Peg 0099</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PegInsertionSide-v1-episode-0099-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PegInsertionSide-v1</strong><span>episode 99</span></div>
+      </article>
+
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0000</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0000-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 0</span></div>
+      </article>
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0027</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0027-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 27</span></div>
+      </article>
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0050</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0050-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 50</span></div>
+      </article>
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0073</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0073-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 73</span></div>
+      </article>
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0087</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0087-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 87</span></div>
+      </article>
+      <article class="sample" data-task="plug">
+        <div class="media"><span class="tag">Plug 0099</span><video preload="metadata" autoplay loop muted playsinline><source src="assets/PlugCharger-v1-episode-0099-quad.mp4" type="video/mp4"></video></div>
+        <div class="body"><strong>PlugCharger-v1</strong><span>episode 99</span></div>
+      </article>
+    </section>
+  </main>
+  <script>
+    const buttons = Array.from(document.querySelectorAll("[data-filter]"));
+    const samples = Array.from(document.querySelectorAll(".sample"));
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter;
+        buttons.forEach((b) => b.classList.toggle("active", b === button));
+        samples.forEach((sample) => {
+          sample.classList.toggle("hidden", filter !== "all" && sample.dataset.task !== filter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
